@@ -15,4 +15,11 @@ app.use(
 app.use(logger);
 app.use('/api', doctorRoute);
 
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  });
+});
+
 export default app;

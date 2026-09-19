@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Appointment from '../models/Appointment.js';
 import Doctor from '../models/Doctor.js';
 import Slot from '../models/Slot.js';
@@ -64,8 +65,6 @@ const bookAppointment = async (req, res) => {
     const { doctorId, slotId, patientName, patientEmail, patientAge } =
       req.body;
 
-    console.log(doctorId, slotId, patientName, patientEmail, patientAge);
-
     const totalBill = await consultationFee(doctorId, slotId, patientAge);
 
     const bookedSlot = await Appointment.create({
@@ -77,11 +76,29 @@ const bookAppointment = async (req, res) => {
       totalPrice: totalBill.total,
     });
 
-    res.status(200).json({
+    const updatedSlot = await Slot.findOneAndUpdate(
+      { _id: slotId, capacity: { $gt: 0 } },
+      {
+        $inc: { capacity: -1 },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updatedSlot) {
+      return res.status(400).json({
+        success: false,
+        message: 'Slot is fully booked',
+      });
+    }
+
+    res.status(201).json({
       success: true,
-      message: 'appointment slot booked',
-      bookedSlot,
-      totalBill,
+      message: 'Appointment booked successfully',
+      appointment: bookedSlot,
+      capacityLeft: updatedSlot.capacity,
     });
   } catch (error) {
     console.log(error);
@@ -91,6 +108,86 @@ const bookAppointment = async (req, res) => {
       message: 'server error',
       error: error.message,
     });
+  }
+};
+
+// production level but need mongoDb atlas or shell re6 configuration
+const booking = async (req, res) => {
+  const { doctorId, slotId, patientName, patientEmail, patientAge } = req.body;
+
+  if (!doctorId || !slotId || !patientName || !patientEmail || !patientAge) {
+    return res.status(400).json({
+      success: false,
+      message: 'All fields are required',
+    });
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const totalBill = await consultationFee(doctorId, slotId, patientAge);
+
+    const slot = await Slot.findOneAndUpdate(
+      {
+        _id: slotId,
+        doctorId: doctorId,
+        capacity: { $gt: 0 },
+      },
+      {
+        $inc: { capacity: -1 },
+      },
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
+
+    if (!slot) {
+      const error = new Error('Slot is no longer available');
+      error.statusCode = 409;
+      throw error;
+    }
+
+    const [appointment] = await Appointment.create(
+      [
+        {
+          doctorId,
+          slotId,
+          patientName,
+          patientEmail,
+          patientAge,
+          totalPrice: totalBill.total,
+        },
+      ],
+      { session },
+    );
+
+    await session.commitTransaction();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Appointment booked successfully',
+      appointment,
+      remainingSeats: slot.capacity,
+    });
+  } catch (error) {
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+
+    console.error('Booking error:', error);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.statusCode
+        ? error.message
+        : 'Something went wrong while booking the appointment',
+    });
+  } finally {
+    await session.endSession();
   }
 };
 

@@ -42,7 +42,6 @@ const appointmentSchema = new mongoose.Schema(
 
 appointmentSchema.index(
   {
-    doctorId: 1,
     slotId: 1,
     patientEmail: 1,
   },
