@@ -160,7 +160,7 @@ export default function AppointmentPage() {
     <section className="">
       <div className="flex justify-center items-center h-screen gap-5 py-15 w-full ">
         <div className="flex flex-col w-1/2 bg-[#303030] h-full p-5 gap-5 shadow-xl">
-          <h1 className="text-2xl mb-5">Book a Appointment</h1>
+          <h1 className="text-2xl font-semibold">Book an Appointment</h1>
           <form
             onSubmit={handleSubmit}
             className="flex gap-5 items-end bg-[#414141] p-5 shadow-xl"
@@ -191,6 +191,7 @@ export default function AppointmentPage() {
                 onChange={handleChange}
                 min={minDate}
                 max={maxDate}
+                dateFormat="dd/MM/yyyy"
                 required
               />
             </div>
@@ -302,7 +303,7 @@ export default function AppointmentPage() {
           <h2 className=" p-2 text-xl">Billing Details</h2>
           <hr className="text-[#747474]" />
 
-          <div className="grid grid-cols-2 gap-2 ">
+          <div className="grid grid-cols-2 gap-2 px-2">
             <h1 className="font-semibold">Name:</h1>
             <h1>{appointmentForm?.patientName}</h1>
 
@@ -324,7 +325,7 @@ export default function AppointmentPage() {
 
           <hr className="text-[#747474]" />
 
-          <div>
+          <div className="px-2">
             <p className="flex justify-between">
               <span>Consultation Fee : </span>
               <span className="text-left">
@@ -347,7 +348,7 @@ export default function AppointmentPage() {
 
           <hr className="text-[#747474]" />
 
-          <h3 className="text-lg font-semibold flex justify-between">
+          <h3 className="text-lg font-semibold flex justify-between px-2">
             <span>Total : </span>
             <span className="text-left">{billingDetails.total || 0} ₹</span>
           </h3>
@@ -360,7 +361,7 @@ export default function AppointmentPage() {
             Book Appoinment
           </button>
 
-          <div className="pl-5 text-sm">
+          <div className="pl-7 text-sm ">
             <ul>
               <li>20% discount on Age below 12.</li>
               <li>extra charge of 10% on Weekend. </li>
