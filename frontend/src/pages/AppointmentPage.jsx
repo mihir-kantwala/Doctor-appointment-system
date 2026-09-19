@@ -159,11 +159,11 @@ export default function AppointmentPage() {
   return (
     <section className="">
       <div className="flex justify-center items-center h-screen gap-5 py-15 w-full ">
-        <div className="flex flex-col w-1/2 bg-[#303030] h-full p-5 gap-5 ">
+        <div className="flex flex-col w-1/2 bg-[#303030] h-full p-5 gap-5 shadow-xl">
           <h1 className="text-2xl mb-5">Book a Appointment</h1>
           <form
             onSubmit={handleSubmit}
-            className="flex gap-5 items-end bg-[#414141] p-5"
+            className="flex gap-5 items-end bg-[#414141] p-5 shadow-xl"
           >
             <div className="grow-3 flex flex-col">
               <label>Select A Doctor : </label>
@@ -196,7 +196,7 @@ export default function AppointmentPage() {
             </div>
 
             <button
-              className="bg-[#0049e7] h-11 px-5  font-semibold rounded-lg cursor-pointer"
+              className="bg-[#0049e7] h-11 px-5  font-semibold rounded-lg cursor-pointer shadow-xl"
               type="submit"
             >
               Get Slots
@@ -204,7 +204,7 @@ export default function AppointmentPage() {
           </form>
 
           {slots.length > 0 && (
-            <div className="flex flex-col  bg-[#414141] p-5">
+            <div className="flex flex-col  bg-[#414141] p-5 shadow-xl">
               <h1 className="mb-2 text-md font-semibold">Select Time :</h1>
               <div className="flex  gap-5 items-end">
                 {slots.map((slot) => {
@@ -212,7 +212,7 @@ export default function AppointmentPage() {
 
                   return (
                     <button
-                      className={`p-2 w-full rounded-lg cursor-pointer disabled:bg-[#5a5a5a] disabled:text-[#afafaf] ${
+                      className={`p-2 w-full rounded-lg cursor-pointer shadow-xl  disabled:bg-[#5a5a5a] disabled:text-[#afafaf] ${
                         isSelected
                           ? 'bg-blue-600 text-white ring-2 ring-blue-300'
                           : 'bg-[#202020]'
@@ -242,7 +242,7 @@ export default function AppointmentPage() {
           {detilsForm && (
             <form
               // onSubmit={handleAppointmentSubmit}
-              className=" flex flex-col w-full items-end gap-5  bg-[#414141] p-5"
+              className=" flex flex-col w-full items-end gap-5  bg-[#414141] p-5 shadow-xl"
             >
               <div className=" flex gap-5 w-full">
                 <div className="flex flex-col w-1/2 ">
@@ -286,7 +286,7 @@ export default function AppointmentPage() {
 
                 <div>
                   <button
-                    className="bg-[#cacaca] text-[#202020]  font-semibold rounded-lg py-2 px-5 cursor-pointer"
+                    className="bg-[#cacaca] text-[#202020]  font-semibold rounded-lg py-2 px-5 cursor-pointer shadow-xl"
                     type="button"
                     onClick={hanldeResetForm}
                   >
@@ -298,7 +298,7 @@ export default function AppointmentPage() {
           )}
         </div>
 
-        <div className="flex flex-col w-1/4 bg-[#353535] h-full gap-2 p-5">
+        <div className="flex flex-col w-1/4 bg-[#303030] h-full gap-2 p-5 shadow-xl">
           <h2 className=" p-2 text-xl">Billing Details</h2>
           <hr className="text-[#747474]" />
 
@@ -353,7 +353,7 @@ export default function AppointmentPage() {
           </h3>
 
           <button
-            className="bg-[#0049e7] py-2 px-5  font-semibold rounded-lg w-full cursor-pointer"
+            className="bg-[#0049e7] py-2 px-5  font-semibold rounded-lg w-full cursor-pointer shadow-xl"
             type="submit"
             onClick={handleAppointmentSubmit}
           >
